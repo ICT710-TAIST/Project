@@ -51,6 +51,12 @@ $ flask shell
 - mange.py
 ## CRUD (Using Flask-SQLAlchemy)
 ### Creating models
+The following commands are not necessary during development. Unless you want to play around CRUD with flask shell. 
+```sh
+# to tell flask where to load shell context.
+$ export FLASK_APP=manage.py 
+$ flask shell
+```
 #### Adding device
 ```python
 device = Device(
