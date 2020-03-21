@@ -6,7 +6,7 @@
 - PostgreSQL
 - Heroku CLI
 
-## Installation
+## Setting Up
 ### 1. Clone Project
 ```sh
 $ git clone git@github.com:ICT710-TAIST/Project-Cloud.git
