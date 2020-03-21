@@ -50,24 +50,35 @@ $ flask shell
 #### Adding device
 ```python
 device = Device(
-    device_name=device_name, 
-    device_client=device_client_id)
+    device_name, 
+    device_client_id)
 db.session.add(device)
 db.session.commit()
 ```
 #### Adding sensor data
 ```python
 sensor_data = SensorData(
-    device_name=device_name, # foreign key
-    roll=roll,
-    pitch=pitch,
-    yaw=yaw,
-    acc_x=acc_x,
-    acc_y=acc_y,
-    acc_z=acc_z
+    device_name, # foreign key
+    roll,
+    pitch,
+    yaw,
+    acc_x,
+    acc_y,
+    acc_z
 )
 db.session.add(sensor_data)
 db.session.commit()
+```
+#### Reading models
+```python
+devices = Device.query.all()
+devices
+```
+#### Data Serialization
+You can make a JSON of an instance by using serialization
+```python
+for device for Device.query.all():
+    device.serialization()
 ```
 ## Database Migrations
 ```sh
@@ -85,4 +96,4 @@ $ heroku local
 ```
 
 #  Deployment
-Deploy with heroku, you can push and merge to the master branch, heroku will automatically build the recent sourecode.
+You can push and merge to the master branch, heroku will automatically build the recently updated sourecode.
