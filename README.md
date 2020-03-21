@@ -25,6 +25,10 @@ $ deactivate
 ```sh
 $ pip install -r requirements.txt
 ```
+If you add new dependency, do not forget to add it to requirements.txt, you can do so by using this command
+```sh
+$ pip freeze > requirements.txt
+```
 ### 4. Create database in your local machine
 ```sh
 $ sudo createdb postgres
