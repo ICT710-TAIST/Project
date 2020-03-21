@@ -7,11 +7,11 @@
 - Heroku CLI
 
 ## Setting Up
-### 1. Clone Project
+### 1. Clone project
 ```sh
 $ git clone git@github.com:ICT710-TAIST/Project-Cloud.git
 ```
-### 2. Create python Virtual Environment
+### 2. Create python virtual environment
 ```sh
 $ cd Project-Cloud
 $ python3 -m virtualenv .
@@ -21,7 +21,7 @@ When you need to deactivate the virutal environment using this command
 ```sh
 $ deactivate
 ```
-### 3. Install Dependencies
+### 3. Install dependencies
 ```sh
 $ pip install -r requirements.txt
 ```
