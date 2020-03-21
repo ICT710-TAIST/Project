@@ -107,3 +107,4 @@ $ heroku local
 
 #  Deployment
 You can push and merge to the master branch, heroku will automatically build the recently updated sourecode.
+Deployed to heroku at https://taist-2020-heroku.herokuapp.com/ 
