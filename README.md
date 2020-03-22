@@ -81,8 +81,8 @@ db.session.commit()
 ```
 #### Reading models
 ```python
-devices = Device.query.all()
-devices
+all_devices = Device.query.all()
+all_sensor_data = SensorData.query.all()
 ```
 #### Data Serialization
 You can make a JSON of an instance by using serialization
