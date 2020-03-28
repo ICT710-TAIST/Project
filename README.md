@@ -33,7 +33,7 @@ $ pip freeze > requirements.txt
 ```sh
 $ sudo createdb postgres
 $ psql -d postgres # to check the database you have created.
-$ export APP_SETTINGS="postgresql://localhost/postgres" # to set environment variable.
+$ export DATABASE_URL="postgresql://localhost/postgres" # to set environment variable.
 ```
 
 ### 5. Create database tables
@@ -57,38 +57,31 @@ The following commands are not necessary during development. Unless you want to 
 $ export FLASK_APP=manage.py 
 $ flask shell
 ```
-#### Adding device
-```python
-device = Device(
-    device_name, 
-    device_client_id)
-db.session.add(device)
-db.session.commit()
-```
 #### Adding sensor data
 ```python
 sensor_data = SensorData(
-    device_name, # foreign key
+    device_id, 
     roll,
     pitch,
     yaw,
     acc_x,
     acc_y,
-    acc_z
+    acc_z,
+    label,
+    type # 'training' or 'predicted'
 )
 db.session.add(sensor_data)
 db.session.commit()
 ```
 #### Reading models
 ```python
-all_devices = Device.query.all()
 all_sensor_data = SensorData.query.all()
 ```
 #### Data Serialization
 You can make a JSON of an instance by using serialization
 ```python
-for device for Device.query.all():
-    device.serialization()
+for data for all_sensor_data:
+    all_sensor_data.serialization()
 ```
 ## Database Migrations
 ```sh
