@@ -102,16 +102,19 @@ $ heroku local
 You can push and merge to the master branch, heroku will automatically build the recently updated sourecode.
 Deployed to heroku at https://taist-2020-heroku.herokuapp.com/ 
 
-# Test Cases 
-#### Test case: MQTT_RD_TC01
-##### Describtion:
-Check if message is valid
-##### Test procdure:
-1. Start MQTT client
-2. Create different messages with valid and invalid messages
-3. Send messages to MQTT server
-##### Test data:
-MQTT payload
-##### Expected result:
-Exception at invalid payload return errorcode, valid payload return 0
-
+# Test 
+#### Test case: MQTT-Handler-TC-10
+* Describtion:
+    * Check if message is valid
+    
+* Test procdure:
+    1. Start MQTT client
+    2. Create different messages with valid and invalid messages
+    3. Send messages to MQTT server
+    
+* Test data:
+    * MQTT payload
+    
+* Expected result:
+    Exception at invalid payload return errorcode, valid payload return 0
+    
