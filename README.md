@@ -119,7 +119,8 @@ Deployed to heroku at https://taist-2020-heroku.herokuapp.com/
     2. Check that the file is received
     3. Request and Responses
     	* Request   GET	    /api/sensor_data
-        * Responses	200	    A csv file including column names.
-	                500	    Internal server error
+        * Responses	
+            * 200  : A csv file including column names.
+	        * 500  : Internal server error
 * Expected results:
     * csv file 
