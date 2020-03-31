@@ -110,7 +110,7 @@ You can push and merge to the master branch, heroku will automatically build the
 Deployed to heroku at https://taist-2020-heroku.herokuapp.com/ 
 
 # Test 
-* Test case: MQTT-Handler-TC-00
+#### Test case: MQTT-Handler-TC-00
 * Description:
     * MQTT Handler - Predict Incoming Data
 * Test procedure:
