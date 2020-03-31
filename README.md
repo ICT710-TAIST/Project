@@ -107,7 +107,7 @@ Deployed to heroku at https://taist-2020-heroku.herokuapp.com/
 * Describtion:
     * Check if message is valid
     
-* Test procdure:
+* Test procedure:
     1. Start MQTT client
     2. Create different messages with valid and invalid messages
     3. Send messages to MQTT server
@@ -122,7 +122,7 @@ Deployed to heroku at https://taist-2020-heroku.herokuapp.com/
 * Describtion:
     * Check if input data can store in database
     
-* Test procdure:
+* Test procedure:
     1. Get valid messages from MQTT-Handler-TC-10
     2. Match input data with database model
     3. Store data in data base
@@ -132,4 +132,19 @@ Deployed to heroku at https://taist-2020-heroku.herokuapp.com/
     
 * Expected result:
    * Exception at invalid database model or input data return errorcode, valid payload return "Success"
+
+#### Test case: MQTT-Handler-TC-12
+* Describtion:
+    * Check if data get stored right in database
+    
+* Test procedure:
+    1. Get valid messages from MQTT-Handler-TC-10
+    2. Store data with MQTT-Handler-TC-11
+    3. Load data from database and match with the message
+    
+* Test data/device:
+    * Database
+    
+* Expected result:
+   * Exception if data doesn't match or data can't get load return errorcode, valid payload return "Success"
     
