@@ -112,9 +112,24 @@ Deployed to heroku at https://taist-2020-heroku.herokuapp.com/
     2. Create different messages with valid and invalid messages
     3. Send messages to MQTT server
     
-* Test data:
-    * MQTT payload
+* Test data/device:
+    * Payloda of MQTT @msg/sensor_data/<device_id>
     
 * Expected result:
-    Exception at invalid payload return errorcode, valid payload return 0
+    Exception at invalid payload return errorcode, valid payload return message
+    
+#### Test case: MQTT-Handler-TC-11
+* Describtion:
+    * Check if input data can store in database
+    
+* Test procdure:
+    1. Get valid messages from MQTT-Handler-TC-10
+    2. Match input data with database model
+    3. Store data in data base
+    
+* Test data/device:
+    * Input data and database model
+    
+* Expected result:
+    Exception at invalid database model or input data return errorcode, valid payload return "Success"
     
