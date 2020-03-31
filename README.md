@@ -103,12 +103,12 @@ You can push and merge to the master branch, heroku will automatically build the
 Deployed to heroku at https://taist-2020-heroku.herokuapp.com/ 
 
 
-# Test
-* Test case: restfulApi_TC-00
+# Test 
+#### Test case: restfulApi_TC-00
 
 * Description: 
-    For analysts to get the sensor data for analysis.
-    To test exporting csv file using RESTful api
+    * For analysts to get the sensor data for analysis.
+    * To test exporting csv file using RESTful api
 
 * procedure:
     1. connect database and server to get the recorded and predicted data
@@ -118,8 +118,8 @@ Deployed to heroku at https://taist-2020-heroku.herokuapp.com/
     1. Check data in csv file
     2. Check that the file is received
     3. Request and Responses
-    	Request     GET	    /api/sensor_data
-        Responses	200	    A csv file including column names.
+    	* Request   GET	    /api/sensor_data
+        * Responses	200	    A csv file including column names.
 	                500	    Internal server error
 * Expected results:
-    csv file 
+    * csv file 
