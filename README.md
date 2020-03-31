@@ -116,7 +116,7 @@ Deployed to heroku at https://taist-2020-heroku.herokuapp.com/
     * Payloda of MQTT @msg/sensor_data/<device_id>
     
 * Expected result:
-    Exception at invalid payload return errorcode, valid payload return message
+   * Exception at invalid payload return errorcode, valid payload return message
     
 #### Test case: MQTT-Handler-TC-11
 * Describtion:
@@ -131,5 +131,5 @@ Deployed to heroku at https://taist-2020-heroku.herokuapp.com/
     * Input data and database model
     
 * Expected result:
-    Exception at invalid database model or input data return errorcode, valid payload return "Success"
+   * Exception at invalid database model or input data return errorcode, valid payload return "Success"
     
