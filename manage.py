@@ -1,5 +1,4 @@
-from app import app, db, migrate
-from models import SensorData
+from app import app, db, migrate, SensorData
 
 @app.shell_context_processor
 def make_shell_context():

@@ -1,8 +1,8 @@
-"""init migration
+"""stable data model
 
-Revision ID: e868c81b7687
-Revises: 
-Create Date: 2020-03-28 14:04:30.807774
+Revision ID: f2dc9f55262f
+Revises: 0d9279a13b2a
+Create Date: 2020-03-31 17:06:34.381140
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = 'e868c81b7687'
-down_revision = None
+revision = 'f2dc9f55262f'
+down_revision = '0d9279a13b2a'
 branch_labels = None
 depends_on = None
 
@@ -27,12 +27,12 @@ def downgrade():
     op.create_table('sensor_data',
     sa.Column('id', sa.INTEGER(), autoincrement=True, nullable=False),
     sa.Column('device_id', sa.INTEGER(), autoincrement=False, nullable=True),
-    sa.Column('roll', postgresql.DOUBLE_PRECISION(precision=53), autoincrement=False, nullable=True),
-    sa.Column('pitch', postgresql.DOUBLE_PRECISION(precision=53), autoincrement=False, nullable=True),
-    sa.Column('yaw', postgresql.DOUBLE_PRECISION(precision=53), autoincrement=False, nullable=True),
-    sa.Column('acc_x', postgresql.DOUBLE_PRECISION(precision=53), autoincrement=False, nullable=True),
-    sa.Column('acc_y', postgresql.DOUBLE_PRECISION(precision=53), autoincrement=False, nullable=True),
-    sa.Column('acc_z', postgresql.DOUBLE_PRECISION(precision=53), autoincrement=False, nullable=True),
+    sa.Column('roll', sa.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('pitch', sa.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('yaw', sa.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('acc_x', sa.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('acc_y', sa.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('acc_z', sa.INTEGER(), autoincrement=False, nullable=True),
     sa.Column('label', sa.INTEGER(), autoincrement=False, nullable=True),
     sa.Column('type', sa.VARCHAR(), autoincrement=False, nullable=True),
     sa.Column('timestamp', postgresql.TIMESTAMP(), autoincrement=False, nullable=False),

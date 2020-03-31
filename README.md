@@ -108,3 +108,57 @@ $ heroku local
 #  Deployment
 You can push and merge to the master branch, heroku will automatically build the recently updated sourecode.
 Deployed to heroku at https://taist-2020-heroku.herokuapp.com/ 
+
+# Test 
+#### Test case: MQTT-Handler-TC-00
+* Description:
+    * MQTT Handler - Predict Incoming Data
+* Test procedure:
+    1. Use mqtt client to publish all possible valid and invalid data
+    2. See log data from server
+    3. Check database if the data was recorded
+
+* Test data/device:
+    * topic: @msg/predict_data/<device_id>
+    * payload: roll,pitch,yaw,acc_x,acc_y,acc_z
+        * device_id(Int)
+        * roll(Int)
+        * pitch(Int)
+        * yaw(Int)
+        * acc_x(Int)
+        * acc_y(Int)
+        * acc_z(Int)
+* Expected results:
+```
+Valid:
+    # Log from server
+    <
+        "device_id": device_id, 
+        "roll": roll, 
+        "pitch": pitch, 
+        "yaw": yaw, 
+        "acc_x": acc_x, 
+        "acc_y": acc_y, 
+        "acc_z": acc_z, 
+        "label": predicted, # result from prediction, it could be '0' or '1'
+        "type": "predict"
+        "timestamp":, datetime
+    >
+    
+    # Record from database
+     id | device_id | roll | pitch | yaw | acc_x | acc_y | acc_z | label |   type   |         timestamp          
+    ----+-----------+------+-------+-----+-------+-------+-------+-------+----------+----------------------------
+      1 |         1 |    1 |     2 |   3 |     4 |     5 |     6 |     1 | predict  | 2020-03-31 12:11:09.343793
+```
+    
+```
+Invalid:
+    # Log from server
+    ErrorInvalidData
+    
+    # Record from database
+     id | device_id | roll | pitch | yaw | acc_x | acc_y | acc_z | label |   type   |         timestamp          
+    ----+-----------+------+-------+-----+-------+-------+-------+-------+----------+----------------------------
+    # No record added
+```
+* Actual results:
