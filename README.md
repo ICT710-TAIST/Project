@@ -47,7 +47,6 @@ $ flask shell
 ## Project Structure
 - app.py
 - config.py
-- models.py
 - mange.py
 ## CRUD (Using Flask-SQLAlchemy)
 ### Creating models
