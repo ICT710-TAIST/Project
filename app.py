@@ -69,6 +69,14 @@ class SensorData(db.Model):
             'type' : self.type,
             'timestamp': self.timestamp
         }
+# The callback for when the client receives a CONNACK response from the server.
+def on_connect(client, userdata, flags, rc):
+    print("Connected with result code "+str(rc))
+
+    # Subscribing in on_connect() means that if we lose the connection and
+    # reconnect then subscriptions will be renewed.
+    client.subscribe([("@msg/predict_data/#", 0), ("@msg/sensor_data/#", 0)])
+#def on_connect
 
 @app.route('/')
 def index():
