@@ -4,6 +4,15 @@ from flask_sqlalchemy import SQLAlchemy
 from config import DevelopmentConfig
 import os
 
+import os
+import pickle
+import paho.mqtt.client as mqtt
+import numpy as np
+import datetime
+
+CLIENT_ID = '4665fab9-4827-40de-a1a6-36e538463bc4'
+NETPIE_TOKEN = 'CXhbMLgUwHFZWKdt77AHEVAgio42f3k7'
+
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -77,6 +86,35 @@ def on_connect(client, userdata, flags, rc):
     # reconnect then subscriptions will be renewed.
     client.subscribe([("@msg/predict_data/#", 0), ("@msg/sensor_data/#", 0)])
 #def on_connect
+
+# The callback for when a PUBLISH message is received from the server.
+def on_message(client, userdata, msg):
+    if 'sensor_data' in msg.topic:
+        #Validate incoming data
+        try:
+            payload = msg.payload.decode('utf-8')
+            X = np.array([int(x) for x in payload.split(',')])
+            device_id = int(msg.topic.split('/')[-1])
+            roll    = int(X[0])
+            pitch   = int(X[1])
+            yaw     = int(X[2])
+            acc_x   = int(X[3])
+            acc_y   = int(X[4])
+            acc_z   = int(X[5])
+            label   = int(X[6])
+            type    = 'training'
+        except:
+            print("InvalidDataError")
+
+        #Record the data
+        try:
+            data = SensorData(device_id, roll, pitch, yaw, acc_x, acc_y, acc_z, label, type)
+            print(data)
+            db.session.add(data)
+            db.session.commit()
+        except Exception as e:
+            print(e)
+    #if sensor_data
 
 @app.route('/')
 def index():
