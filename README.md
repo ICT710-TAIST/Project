@@ -57,38 +57,31 @@ The following commands are not necessary during development. Unless you want to 
 $ export FLASK_APP=manage.py 
 $ flask shell
 ```
-#### Adding device
-```python
-device = Device(
-    device_name, 
-    device_client_id)
-db.session.add(device)
-db.session.commit()
-```
 #### Adding sensor data
 ```python
 sensor_data = SensorData(
-    device_name, # foreign key
+    device_id, # foreign key
     roll,
     pitch,
     yaw,
     acc_x,
     acc_y,
-    acc_z
+    acc_z,
+    label,
+    type
 )
 db.session.add(sensor_data)
 db.session.commit()
 ```
 #### Reading models
 ```python
-all_devices = Device.query.all()
 all_sensor_data = SensorData.query.all()
 ```
 #### Data Serialization
 You can make a JSON of an instance by using serialization
 ```python
-for device for Device.query.all():
-    device.serialization()
+for sensor_data for SensorData.query.all():
+    sensor_data.serialization()
 ```
 ## Database Migrations
 ```sh
@@ -154,7 +147,7 @@ Valid:
 ```
 Invalid:
     # Log from server
-    ErrorInvalidData
+    InvalidDataError
     
     # Record from database
      id | device_id | roll | pitch | yaw | acc_x | acc_y | acc_z | label |   type   |         timestamp          

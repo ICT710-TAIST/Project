@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, make_response
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from config import DevelopmentConfig
@@ -77,6 +77,8 @@ class SensorData(db.Model):
             'type' : self.type,
             'timestamp': self.timestamp
         }
+#class SensorData
+
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
@@ -92,7 +94,7 @@ def on_message(client, userdata, msg):
         #Validate incoming data
         try:
             payload = msg.payload.decode('utf-8')
-            X = np.array([int(x) for x in payload.split(',')])
+            X = np.array([int(x) for x in payload.rstrip('\x00').split(',')])
             device_id = int(msg.topic.split('/')[-1])
             roll    = int(X[0])
             pitch   = int(X[1])
