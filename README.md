@@ -66,7 +66,9 @@ sensor_data = SensorData(
     yaw,
     acc_x,
     acc_y,
-    acc_z
+    acc_z,
+    label,
+    type
 )
 db.session.add(sensor_data)
 db.session.commit()
