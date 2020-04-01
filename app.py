@@ -12,11 +12,16 @@ db = SQLAlchemy(app)
 
 migrate = Migrate(app, db)
 
+model = pickle.load(open('machine_learning/model.pkl', 'rb'))
+
+client = mqtt.Client(client_id=CLIENT_ID)
+
 @app.route('/')
 def index():
     return 'Hello World!'
 
 if __name__ == '__main__':
     app.run()
-
+    client.connect("mqtt.netpie.io", 1883, 60)
+    client.loop_start()
 
