@@ -116,12 +116,79 @@ def on_message(client, userdata, msg):
             print(e)
     #if sensor_data
 
+    if 'predict_data' in msg.topic:
+        #Validate incoming data
+        try:
+            payload = msg.payload.decode('utf-8')
+            X = np.array([int(x) for x in payload.split(',')])
+            device_id = int(msg.topic.split('/')[-1])
+            roll    = int(X[0])
+            pitch   = int(X[1])
+            yaw     = int(X[2])
+            acc_x   = int(X[3])
+            acc_y   = int(X[4])
+            acc_z   = int(X[5])
+            label   = int(model.predict(X))
+            type    = 'predicted'
+        except:
+            print("InvalidDataError")
+            return
+
+        #Record the data
+        try:
+            data = SensorData(device_id, roll, pitch, yaw, acc_x, acc_y, acc_z, label, type)
+            print(data)
+            db.session.add(data)
+            db.session.commit()
+        except Exception as e:
+            print(e)
+            return
+    #if predict_data    
+def on_message
+
+@app.route('/api/sensor_data')
+def api_sensor_data():
+
+    device_id = request.args.get('device_id')
+    label     = request.args.get('label')
+    type      = request.args.get('type')
+    print('{} {} {}'.format(device_id, label, type))
+
+    try:
+        q0 = SensorData.query.filter()
+        if device_id:
+            int(device_id)
+            q1 = SensorData.query.filter_by(device_id=device_id)
+            q0 = q0.intersect(q1)
+        if label:
+            int(label)
+            q2 = SensorData.query.filter_by(label=label)
+            q0 = q0.intersect(q2)
+        if type:
+            if type not in ['training', 'predicted']:
+                raise Exception()
+            q3 = SensorData.query.filter_by(type=type)
+            q0 = q0.intersect(q3)
+        #if
+        print(q0.all())
+    except:
+        print('InvalidDataError')
+        res = make_response('Bad request', 400)
+        return res
+
+    res = make_response('OK', 200) # Change to csv file
+
+    return res
+#def api_sensor_data
+
 @app.route('/')
 def index():
     return 'Hello World!'
 
 if __name__ == '__main__':
-    app.run()
+    client.on_connect = on_connect
+    client.on_message = on_message
+    client.username_pw_set(NETPIE_TOKEN)
     client.connect("mqtt.netpie.io", 1883, 60)
     client.loop_start()
-
+    app.run()
