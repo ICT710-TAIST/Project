@@ -47,7 +47,6 @@ $ flask shell
 ## Project Structure
 - app.py
 - config.py
-- models.py
 - mange.py
 ## CRUD (Using Flask-SQLAlchemy)
 ### Creating models
@@ -69,6 +68,7 @@ sensor_data = SensorData(
     acc_z,
     label,
     type # 'training' or 'predicted'
+
 )
 db.session.add(sensor_data)
 db.session.commit()
@@ -80,9 +80,10 @@ all_sensor_data = SensorData.query.all()
 #### Data Serialization
 You can make a JSON of an instance by using serialization
 ```python
-for data for all_sensor_data:
-    all_sensor_data.serialization()
-```
+
+for sensor_data for SensorData.query.all():
+    sensor_data.serialization()
+ ```
 ## Database Migrations
 ```sh
 # to tell flask where is our app
@@ -102,24 +103,101 @@ $ heroku local
 You can push and merge to the master branch, heroku will automatically build the recently updated sourecode.
 Deployed to heroku at https://taist-2020-heroku.herokuapp.com/ 
 
+# Test 
+#### Test case: MQTT-Handler-TC-10
+* Describtion:
+    * Check if message is valid
+    
+* Test procedure:
+    1. Start MQTT client
+    2. Create different messages with valid and invalid messages
+    3. Send messages to MQTT server
+    
+* Test data/device:
+    * Payloda of MQTT @msg/sensor_data/<device_id>
+    
+* Expected result:
+   * Exception at invalid payload return errorcode, valid payload return message
+    
+#### Test case: MQTT-Handler-TC-11
+* Describtion:
+    * Check if input data can store in database
+    
+* Test procedure:
+    1. Get valid messages from MQTT-Handler-TC-10
+    2. Match input data with database model
+    3. Store data in data base
+    
+* Test data/device:
+    * Input data and database model
+    
+* Expected result:
+   * Exception at invalid database model or input data return errorcode, valid payload return "Success"
 
-# Test
-* Test case: restfulApi_TC-00
+#### Test case: MQTT-Handler-TC-12
+* Describtion:
+    * Check if data get stored right in database
+    
+* Test procedure:
+    1. Get valid messages from MQTT-Handler-TC-10
+    2. Store data with MQTT-Handler-TC-11
+    3. Load data from database and match with the message
+    
+* Test data/device:
+    * Database
+    
+* Expected result:
+   * Exception if data doesn't match or data can't get load return errorcode, valid payload return "Success"
+    
+#### Test case: MQTT-Handler-TC-00
+* Description:
+    * MQTT Handler - Predict Incoming Data
+* Test procedure:
+    1. Use mqtt client to publish all possible valid and invalid data
+    2. See log data from server
+    3. Check database if the data was recorded
 
-* Description: 
-    For analysts to get the sensor data for analysis.
-    To test exporting csv file using RESTful api
-
-* procedure:
-    1. connect database and server to get the recorded and predicted data
-    2. export to csv file using RESTful api
-
-* Test data:
-    1. Check data in csv file
-    2. Check that the file is received
-    3. Request and Responses
-    	Request     GET	    /api/sensor_data
-        Responses	200	    A csv file including column names.
-	                500	    Internal server error
+* Test data/device:
+    * topic: @msg/predict_data/<device_id>
+    * payload: roll,pitch,yaw,acc_x,acc_y,acc_z
+        * device_id(Int)
+        * roll(Int)
+        * pitch(Int)
+        * yaw(Int)
+        * acc_x(Int)
+        * acc_y(Int)
+        * acc_z(Int)
 * Expected results:
-    csv file 
+```
+Valid:
+    # Log from server
+    <
+        "device_id": device_id, 
+        "roll": roll, 
+        "pitch": pitch, 
+        "yaw": yaw, 
+        "acc_x": acc_x, 
+        "acc_y": acc_y, 
+        "acc_z": acc_z, 
+        "label": predicted, # result from prediction, it could be '0' or '1'
+        "type": "predict"
+        "timestamp":, datetime
+    >
+    
+    # Record from database
+     id | device_id | roll | pitch | yaw | acc_x | acc_y | acc_z | label |   type   |         timestamp          
+    ----+-----------+------+-------+-----+-------+-------+-------+-------+----------+----------------------------
+      1 |         1 |    1 |     2 |   3 |     4 |     5 |     6 |     1 | predict  | 2020-03-31 12:11:09.343793
+```
+    
+```
+Invalid:
+    # Log from server
+    InvalidDataError
+    
+    # Record from database
+     id | device_id | roll | pitch | yaw | acc_x | acc_y | acc_z | label |   type   |         timestamp          
+    ----+-----------+------+-------+-----+-------+-------+-------+-------+----------+----------------------------
+    # No record added
+```
+* Actual results:
