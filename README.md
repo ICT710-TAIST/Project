@@ -201,3 +201,23 @@ Invalid:
     # No record added
 ```
 * Actual results:
+
+#### Test case: RESTful-API-csv-00
+
+* Describtion:
+    * For analysts to get the sensor data for analysis
+    * To test exporting csv file using RESTful API
+    
+* Test procedure:
+    1. Connect database and server to get the recorded and predicted data
+    2. Export sensor data to csv file 
+    
+* Test data/device:
+    * Check sensor data in csv file
+    * Check database and csv file
+    * Requests and Responses
+        * 200 : A csv file including column names
+        * 500 : Internal server error
+
+* Expected result:
+   * Sensor data as csv file
