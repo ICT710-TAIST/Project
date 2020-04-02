@@ -1,32 +1,28 @@
-from flask import Flask, request
+from flask import Flask, request, make_response
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from config import DevelopmentConfig
+
 import os
-<<<<<<< Updated upstream
-=======
+
 import pickle
 import paho.mqtt.client as mqtt
 import numpy as np
 import datetime
 
-#Own python module
-import reviser
-
-CLIENT_ID = ''
-NETPIE_TOKEN = ''
->>>>>>> Stashed changes
+CLIENT_ID = 'f9cf386f-c6ab-4126-9eb7-96afa00c9095'
+NETPIE_TOKEN = 'YNUUUmtUZpRaNMYaeLRTuvxCXrzkg86a'
 
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 db = SQLAlchemy(app)
 
 migrate = Migrate(app, db)
 
-<<<<<<< Updated upstream
-=======
+model = pickle.load(open('machine_learning/model.pkl', 'rb'))
+
 client = mqtt.Client(client_id=CLIENT_ID)
 
 class SensorData(db.Model):
@@ -82,7 +78,7 @@ class SensorData(db.Model):
             'type' : self.type,
             'timestamp': self.timestamp
         }
-
+#class SensorData
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
@@ -109,9 +105,24 @@ def on_message(client, userdata, msg):
                 acc_y   = int(X[4])
                 acc_z   = int(X[5])
                 label   = int(X[6])
-                type    = 'Training'
+                type    = 'training'
             else    
                 print("InvalidDataError")
+    
+    if 'predict_data' in msg.topic:
+        #Validate incoming data
+        try:
+            payload = msg.payload.decode('utf-8')
+            X = np.array([int(x) for x in payload.rstrip('\x00').split(',')])
+            device_id = int(msg.topic.split('/')[-1])
+            roll    = int(X[0])
+            pitch   = int(X[1])
+            yaw     = int(X[2])
+            acc_x   = int(X[3])
+            acc_y   = int(X[4])
+            acc_z   = int(X[5])
+            label   = int(model.predict(X))
+            type    = 'predicted'
         except:
             print("InvalidDataError")
             return
@@ -128,12 +139,14 @@ def on_message(client, userdata, msg):
     #if predict_data
 #def on_message
 
->>>>>>> Stashed changes
 @app.route('/')
 def index():
     return 'Hello World!'
 
 if __name__ == '__main__':
+    client.on_connect = on_connect
+    client.on_message = on_message
+    client.username_pw_set(NETPIE_TOKEN)
+    client.connect("mqtt.netpie.io", 1883, 60)
+    client.loop_start()
     app.run()
-
-

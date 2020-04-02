@@ -47,7 +47,6 @@ $ flask shell
 ## Project Structure
 - app.py
 - config.py
-- models.py
 - mange.py
 ## CRUD (Using Flask-SQLAlchemy)
 ### Creating models
@@ -69,6 +68,7 @@ sensor_data = SensorData(
     acc_z,
     label,
     type # 'training' or 'predicted'
+
 )
 db.session.add(sensor_data)
 db.session.commit()
@@ -80,9 +80,10 @@ all_sensor_data = SensorData.query.all()
 #### Data Serialization
 You can make a JSON of an instance by using serialization
 ```python
-for data for all_sensor_data:
-    all_sensor_data.serialization()
-```
+
+for sensor_data for SensorData.query.all():
+    sensor_data.serialization()
+ ```
 ## Database Migrations
 ```sh
 # to tell flask where is our app
@@ -148,3 +149,55 @@ Deployed to heroku at https://taist-2020-heroku.herokuapp.com/
 * Expected result:
    * Exception if data doesn't match or data can't get load return errorcode, valid payload return "Success"
     
+#### Test case: MQTT-Handler-TC-00
+* Description:
+    * MQTT Handler - Predict Incoming Data
+* Test procedure:
+    1. Use mqtt client to publish all possible valid and invalid data
+    2. See log data from server
+    3. Check database if the data was recorded
+
+* Test data/device:
+    * topic: @msg/predict_data/<device_id>
+    * payload: roll,pitch,yaw,acc_x,acc_y,acc_z
+        * device_id(Int)
+        * roll(Int)
+        * pitch(Int)
+        * yaw(Int)
+        * acc_x(Int)
+        * acc_y(Int)
+        * acc_z(Int)
+* Expected results:
+```
+Valid:
+    # Log from server
+    <
+        "device_id": device_id, 
+        "roll": roll, 
+        "pitch": pitch, 
+        "yaw": yaw, 
+        "acc_x": acc_x, 
+        "acc_y": acc_y, 
+        "acc_z": acc_z, 
+        "label": predicted, # result from prediction, it could be '0' or '1'
+        "type": "predict"
+        "timestamp":, datetime
+    >
+    
+    # Record from database
+     id | device_id | roll | pitch | yaw | acc_x | acc_y | acc_z | label |   type   |         timestamp          
+    ----+-----------+------+-------+-----+-------+-------+-------+-------+----------+----------------------------
+      1 |         1 |    1 |     2 |   3 |     4 |     5 |     6 |     1 | predict  | 2020-03-31 12:11:09.343793
+```
+    
+```
+Invalid:
+    # Log from server
+    InvalidDataError
+    
+    # Record from database
+     id | device_id | roll | pitch | yaw | acc_x | acc_y | acc_z | label |   type   |         timestamp          
+    ----+-----------+------+-------+-----+-------+-------+-------+-------+----------+----------------------------
+    # No record added
+```
+* Actual results:
