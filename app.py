@@ -200,12 +200,12 @@ def api_sensor_data():
 
 
 
-    except:
-       print('InvalidDataError')
-       res = make_response('Bad request', 400)
-       return res
+    #except:
+    #    print('InvalidDataError')
+    #    res = make_response('Bad request', 400)
+    #    return res
 
-    res = make_response('OK', 200) # Change to csv file
+    #res = make_response('OK', 200) # Change to csv file
     res = make_response(outfile.getvalue())
     res.headers["Content-Disposition"] = "attachment; filename=export.csv"
     res.headers["Content-Type"] = "text/csv"
