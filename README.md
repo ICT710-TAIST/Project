@@ -33,7 +33,7 @@ $ pip freeze > requirements.txt
 ```sh
 $ sudo createdb postgres
 $ psql -d postgres # to check the database you have created.
-$ export APP_SETTINGS="postgresql://localhost/postgres" # to set environment variable.
+$ export DATABASE_URL="postgresql://localhost/postgres" # to set environment variable.
 ```
 
 ### 5. Create database tables
@@ -59,7 +59,7 @@ $ flask shell
 #### Adding sensor data
 ```python
 sensor_data = SensorData(
-    device_id, # foreign key
+    device_id, 
     roll,
     pitch,
     yaw,
@@ -67,7 +67,8 @@ sensor_data = SensorData(
     acc_y,
     acc_z,
     label,
-    type
+    type # 'training' or 'predicted'
+
 )
 db.session.add(sensor_data)
 db.session.commit()
@@ -79,9 +80,10 @@ all_sensor_data = SensorData.query.all()
 #### Data Serialization
 You can make a JSON of an instance by using serialization
 ```python
+
 for sensor_data for SensorData.query.all():
     sensor_data.serialization()
-```
+ ```
 ## Database Migrations
 ```sh
 # to tell flask where is our app
@@ -102,6 +104,51 @@ You can push and merge to the master branch, heroku will automatically build the
 Deployed to heroku at https://taist-2020-heroku.herokuapp.com/ 
 
 # Test 
+#### Test case: MQTT-Handler-TC-10
+* Describtion:
+    * Check if message is valid
+    
+* Test procedure:
+    1. Start MQTT client
+    2. Create different messages with valid and invalid messages
+    3. Send messages to MQTT server
+    
+* Test data/device:
+    * Payloda of MQTT @msg/sensor_data/<device_id>
+    
+* Expected result:
+   * Exception at invalid payload return errorcode, valid payload return message
+    
+#### Test case: MQTT-Handler-TC-11
+* Describtion:
+    * Check if input data can store in database
+    
+* Test procedure:
+    1. Get valid messages from MQTT-Handler-TC-10
+    2. Match input data with database model
+    3. Store data in data base
+    
+* Test data/device:
+    * Input data and database model
+    
+* Expected result:
+   * Exception at invalid database model or input data return errorcode, valid payload return "Success"
+
+#### Test case: MQTT-Handler-TC-12
+* Describtion:
+    * Check if data get stored right in database
+    
+* Test procedure:
+    1. Get valid messages from MQTT-Handler-TC-10
+    2. Store data with MQTT-Handler-TC-11
+    3. Load data from database and match with the message
+    
+* Test data/device:
+    * Database
+    
+* Expected result:
+   * Exception if data doesn't match or data can't get load return errorcode, valid payload return "Success"
+    
 #### Test case: MQTT-Handler-TC-00
 * Description:
     * MQTT Handler - Predict Incoming Data
