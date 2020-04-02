@@ -224,3 +224,6 @@ if __name__ == '__main__':
     client.connect("mqtt.netpie.io", 1883, 60)
     client.loop_start()
     app.run()
+
+# http://127.0.0.1:5000 --> Hello World
+# http://127.0.0.1:5000/api/sensor_data --> download CSV
