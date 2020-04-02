@@ -158,7 +158,6 @@ def on_message(client, userdata, msg):
             return
     #if predict_data
 
-
 #def on_message
 
 @app.route('/api/sensor_data')
@@ -195,10 +194,6 @@ def api_sensor_data():
     records = q0.all()
 
     outcsv.writerow(records)
-
-        
-
-
 
     #except:
     #    print('InvalidDataError')
