@@ -57,7 +57,7 @@ class SensorData(db.Model):
         self.type  = type
 
     def __repr__(self):
-        return '<device_id {}, roll {}, pitch {}, yaw {}, acc_x {}, acc_y {}, acc_z {}, label {}, type {}, timestamp {}>'.format(
+        return '{},{},{},{},{},{},{},{},{},{}\n'.format(
             self.device_id,
             self.roll,
             self.pitch,
