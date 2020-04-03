@@ -10,6 +10,9 @@ import paho.mqtt.client as mqtt
 import numpy as np
 import datetime
 
+import csv
+from io import StringIO
+
 CLIENT_ID = 'f9cf386f-c6ab-4126-9eb7-96afa00c9095'
 NETPIE_TOKEN = 'YNUUUmtUZpRaNMYaeLRTuvxCXrzkg86a'
 
@@ -24,6 +27,7 @@ migrate = Migrate(app, db)
 model = pickle.load(open('machine_learning/model.pkl', 'rb'))
 
 client = mqtt.Client(client_id=CLIENT_ID)
+
 
 class SensorData(db.Model):
 
@@ -151,13 +155,61 @@ def on_message(client, userdata, msg):
     #if predict_data
 #def on_message
 
+@app.route('/api/sensor_data')
+def api_sensor_data():
+
+    device_id = request.args.get('device_id')
+    label     = request.args.get('label')
+    type      = request.args.get('type')
+    print('{} {} {}'.format(device_id, label, type))
+
+    #try:
+    q0 = SensorData.query.filter()
+    if device_id:
+        int(device_id)
+        q1 = SensorData.query.filter_by(device_id=device_id)
+        q0 = q0.intersect(q1)
+    print("pass1")
+    if label:
+        int(label)
+        q2 = SensorData.query.filter_by(label=label)
+        q0 = q0.intersect(q2)
+    print("pass2")
+    if type:
+        if type not in ['training', 'predicted']:
+            raise Exception()
+        q3 = SensorData.query.filter_by(type=type)
+        q0 = q0.intersect(q3)
+    print("pass3")
+    #if
+    print(q0.all())
+    print("pass4")
+    outfile = StringIO()
+    outcsv = csv.writer(outfile)
+    records = q0.all()
+
+    outcsv.writerow(records)
+
+    #except:
+    #    print('InvalidDataError')
+    #    res = make_response('Bad request', 400)
+    #    return res
+
+    #res = make_response('OK', 200) # Change to csv file
+    res = make_response(outfile.getvalue())
+    res.headers["Content-Disposition"] = "attachment; filename=export.csv"
+    res.headers["Content-Type"] = "text/csv"
+
+    return res
+#def api_sensor_data
+
 @app.route('/')
 def index():
     return 'Hello World!'
 
 if __name__ == '__main__':
     client.on_connect = on_connect
-    client.on_message = on_message
+    # client.on_message = on_message
     client.username_pw_set(NETPIE_TOKEN)
     client.connect("mqtt.netpie.io", 1883, 60)
     client.loop_start()
