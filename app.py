@@ -10,12 +10,8 @@ import paho.mqtt.client as mqtt
 import numpy as np
 import datetime
 
-#####
-
 import csv
 from io import StringIO
-
-#####
 
 CLIENT_ID = 'f9cf386f-c6ab-4126-9eb7-96afa00c9095'
 NETPIE_TOKEN = 'YNUUUmtUZpRaNMYaeLRTuvxCXrzkg86a'
@@ -98,6 +94,66 @@ def on_connect(client, userdata, flags, rc):
 #def on_connect
 
 # The callback for when a PUBLISH message is received from the server.
+def on_message(client, userdata, msg):
+    #print("topic: {}\tpayload: {}".format(msg.topic, msg.payload.decode('utf-8')))
+    if 'sensor_data' in msg.topic:
+        #Validate incoming data
+        try:
+            payload = msg.payload.decode('utf-8')
+            X = np.array([int(x) for x in payload.rstrip('\x00').split(',')])
+            device_id = int(msg.topic.split('/')[-1])
+            roll    = int(X[0])
+            pitch   = int(X[1])
+            yaw     = int(X[2])
+            acc_x   = int(X[3])
+            acc_y   = int(X[4])
+            acc_z   = int(X[5])
+            label   = int(X[6])
+            type    = 'training'
+        except:
+            print("InvalidDataError")
+            return
+
+        #Record the data
+        try:
+            data = SensorData(device_id, roll, pitch, yaw, acc_x, acc_y, acc_z, label, type)
+            print(data)
+            db.session.add(data)
+            db.session.commit()
+        except Exception as e:
+            print(e)
+            return
+    #if sensor_data
+
+    if 'predict_data' in msg.topic:
+        #Validate incoming data
+        try:
+            payload = msg.payload.decode('utf-8')
+            X = np.array([int(x) for x in payload.rstrip('\x00').split(',')])
+            device_id = int(msg.topic.split('/')[-1])
+            roll    = int(X[0])
+            pitch   = int(X[1])
+            yaw     = int(X[2])
+            acc_x   = int(X[3])
+            acc_y   = int(X[4])
+            acc_z   = int(X[5])
+            label   = int(model.predict([X]))
+            type    = 'predicted'
+        except:
+            print("InvalidDataError")
+            return
+
+        #Record the data
+        try:
+            data = SensorData(device_id, roll, pitch, yaw, acc_x, acc_y, acc_z, label, type)
+            print(data)
+            db.session.add(data)
+            db.session.commit()
+        except Exception as e:
+            print(e)
+            return
+    #if predict_data
+#def on_message
 
 @app.route('/api/sensor_data')
 def api_sensor_data():
@@ -158,6 +214,3 @@ if __name__ == '__main__':
     client.connect("mqtt.netpie.io", 1883, 60)
     client.loop_start()
     app.run()
-
-# http://127.0.0.1:5000 --> Hello World
-# http://127.0.0.1:5000/api/sensor_data --> download CSV
