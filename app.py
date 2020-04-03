@@ -133,7 +133,7 @@ def on_message(client, userdata, msg):
             acc_x   = int(X[3])
             acc_y   = int(X[4])
             acc_z   = int(X[5])
-            label   = int(model.predict(X))
+            label   = int(model.predict([X]))
             type    = 'predicted'
         except:
             print("InvalidDataError")
