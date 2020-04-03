@@ -14,6 +14,7 @@ import datetime
 
 import csv
 from io import StringIO
+from datetime import datetime, timedelta
 
 #####
 
@@ -102,6 +103,9 @@ def on_connect(client, userdata, flags, rc):
 @app.route('/api/sensor_data')
 def api_sensor_data():
 
+    now = datetime.now()
+    five_minutes = now - timedelta(minutes=5)
+
     device_id = request.args.get('device_id')
     label     = request.args.get('label')
     type      = request.args.get('type')
@@ -126,6 +130,11 @@ def api_sensor_data():
         q0 = q0.intersect(q3)
     print("pass3")
     #if
+    
+    q4 = SensorData.query.filter(SensorData.timestamp > five_minutes)
+    q0 = q0.intersect(q4)
+    print("pass3.1")
+    
     print(q0.all())
     print("pass4")
     outfile = StringIO()
