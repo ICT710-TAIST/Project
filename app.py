@@ -209,7 +209,7 @@ def index():
 
 if __name__ == '__main__':
     client.on_connect = on_connect
-    # client.on_message = on_message
+    client.on_message = on_message
     client.username_pw_set(NETPIE_TOKEN)
     client.connect("mqtt.netpie.io", 1883, 60)
     client.loop_start()
