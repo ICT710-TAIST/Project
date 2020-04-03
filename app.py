@@ -12,6 +12,8 @@ import datetime
 
 import csv
 from io import StringIO
+import datetime
+from datetime import timedelta
 
 CLIENT_ID = 'f9cf386f-c6ab-4126-9eb7-96afa00c9095'
 NETPIE_TOKEN = 'YNUUUmtUZpRaNMYaeLRTuvxCXrzkg86a'
@@ -57,7 +59,7 @@ class SensorData(db.Model):
         self.type  = type
 
     def __repr__(self):
-        return '<device_id {}, roll {}, pitch {}, yaw {}, acc_x {}, acc_y {}, acc_z {}, label {}, type {}, timestamp {}>'.format(
+        return '{},{},{},{},{},{},{},{},{},{}\n'.format(
             self.device_id,
             self.roll,
             self.pitch,
@@ -158,6 +160,10 @@ def on_message(client, userdata, msg):
 @app.route('/api/sensor_data')
 def api_sensor_data():
 
+    now = datetime.datetime.now()
+    # five_minutes = now - timedelta(minutes=5)
+    one_hour = now - timedelta(hours=1)
+
     device_id = request.args.get('device_id')
     label     = request.args.get('label')
     type      = request.args.get('type')
@@ -182,6 +188,13 @@ def api_sensor_data():
         q0 = q0.intersect(q3)
     print("pass3")
     #if
+    
+    # q4 = SensorData.query.filter(SensorData.timestamp > five_minutes)
+    q4 = SensorData.query.filter(SensorData.timestamp > one_hour)
+
+    q0 = q0.intersect(q4)
+    print("pass3.1")
+    
     print(q0.all())
     print("pass4")
     outfile = StringIO()
