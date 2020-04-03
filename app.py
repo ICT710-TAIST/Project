@@ -106,7 +106,7 @@ def api_sensor_data():
 
     now = datetime.datetime.now()
     # five_minutes = now - timedelta(minutes=5)
-    one_hour = now - timedelta(hour=1)
+    one_hour = now - timedelta(hours=1)
 
     device_id = request.args.get('device_id')
     label     = request.args.get('label')
