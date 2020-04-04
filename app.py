@@ -9,6 +9,7 @@ import pickle
 import paho.mqtt.client as mqtt
 import numpy as np
 import datetime
+import reviser
 
 CLIENT_ID = 'f9cf386f-c6ab-4126-9eb7-96afa00c9095'
 NETPIE_TOKEN = 'YNUUUmtUZpRaNMYaeLRTuvxCXrzkg86a'
@@ -97,7 +98,7 @@ def on_message(client, userdata, msg):
             payload = msg.payload.decode('utf-8')
             X = np.array([int(x) for x in payload.split(',')])
             device_id = int(msg.topic.split('/')[-1])
-            if reviser.check_msg(X)
+            if reviser.check_msg(X):
                 roll    = int(X[0])
                 pitch   = int(X[1])
                 yaw     = int(X[2])
@@ -106,8 +107,12 @@ def on_message(client, userdata, msg):
                 acc_z   = int(X[5])
                 label   = int(X[6])
                 type    = 'training'
-            else    
+            else:    
                 print("InvalidDataError")
+                
+        except Exception as e:
+            print(e)
+            return
     
     if 'predict_data' in msg.topic:
         #Validate incoming data

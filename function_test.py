@@ -2,7 +2,7 @@ import os
 import numpy as np
 #Own python module
 import reviser
-#import app
+#from app import on_message
 
 def test_check_msg():
 #Function test of in_range to check right behavoiour 
@@ -71,9 +71,9 @@ def test_check_msg():
         i+=1
     
    if not i == 0:
-        return False
+        return "Failed"
     
-   return True
+   return "Success"
 
 
 
@@ -111,9 +111,9 @@ def test_is_integer():
         i+=1
     
     if not i == 0:
-        return False
+        return "Failed"
     
-    return True
+    return "Success"
 
 
 def test_in_range():
@@ -143,24 +143,14 @@ def test_in_range():
         i+=1
     
     if not i == 0:
-        return False
+        return "Failed"
     
-    return True
+    return "Success"
     
     
     
 if __name__ == '__main__':
-    if test_in_range():
-        print("Test of in_range function success!")
-    else : 
-        print("Test of in_range function failed!")
-        
-    if test_is_integer():
-        print("Test of is_integer function success!")
-    else : 
-        print("Test of is_integer function failed!")
-        
-    if test_check_msg():
-        print("Test of check_msg function success!")
-    else : 
-        print("Test of check_msg function failed!")
+    print("Test of in_range function " + test_in_range() + "!") 
+    print("Test of in_range function " + test_is_integer() + "!") 
+    print("Test of in_range function " + test_check_msg() + "!") 
+
