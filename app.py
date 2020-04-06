@@ -204,7 +204,7 @@ def api_sensor_data():
     print("pass all")
     outfile = StringIO()
     outcsv = csv.writer(outfile)
-    records = q0.all()
+    records = q0.limit(limit).all()
 
     outcsv.writerow(records)
 
