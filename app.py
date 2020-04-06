@@ -14,6 +14,7 @@ import csv
 from io import StringIO
 import datetime
 from datetime import timedelta
+from sqlalchemy import desc
 
 CLIENT_ID = 'f9cf386f-c6ab-4126-9eb7-96afa00c9095'
 NETPIE_TOKEN = 'YNUUUmtUZpRaNMYaeLRTuvxCXrzkg86a'
@@ -167,8 +168,11 @@ def api_sensor_data():
     device_id = request.args.get('device_id')
     label     = request.args.get('label')
     type      = request.args.get('type')
-    print('{} {} {}'.format(device_id, label, type))
+    
+    # print('{} {} {}'.format(device_id, label, type))
 
+    limit = request.args.get('limit')
+    print('{} {} {}'.format(device_id, label, type, limit))
     #try:
     q0 = SensorData.query.filter()
     if device_id:
@@ -190,7 +194,8 @@ def api_sensor_data():
     #if
     
     # q4 = SensorData.query.filter(SensorData.timestamp > five_minutes)
-    q4 = SensorData.query.filter(SensorData.timestamp > one_hour)
+    # q4 = SensorData.query.filter(SensorData.timestamp > one_hour)
+    q4 = SensorData.query.order_by(desc(SensorData.timestamp)).limit(limit)
 
     q0 = q0.intersect(q4)
     print("pass3.1")
