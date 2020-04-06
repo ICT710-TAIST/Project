@@ -195,16 +195,16 @@ def api_sensor_data():
     
     # q4 = SensorData.query.filter(SensorData.timestamp > five_minutes)
     # q4 = SensorData.query.filter(SensorData.timestamp > one_hour)
-    q4 = SensorData.query.order_by(desc(SensorData.timestamp)).limit(limit)
+    #q4 = SensorData.query.order_by(desc(SensorData.timestamp))
 
-    q0 = q0.intersect(q4)
-    print("pass3.1")
+    #q0 = q0.intersect(q4)
+    #print("pass4")
     
-    print(q0.all())
-    print("pass4")
+    print(q0.order_by(desc(SensorData.timestamp)).limit(limit).all())
+    print("pass all")
     outfile = StringIO()
     outcsv = csv.writer(outfile)
-    records = q0.all()
+    records = q0.order_by(desc(SensorData.timestamp)).limit(limit).all()
 
     outcsv.writerow(records)
 
